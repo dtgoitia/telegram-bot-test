@@ -1,9 +1,8 @@
-# import click
-
+from telegram_bot.config import get_config
 
 
 def main() -> None:
-    print('hi')
+    token = get_config('TOKEN')
 
 
 if __name__ == '__main__':
