@@ -1,3 +1,4 @@
+import itertools
 import logging
 from typing import Dict, FrozenSet, List
 
@@ -15,10 +16,12 @@ def _index_exercises(exercises: List[Exercise]) -> _ExerciseIndex:
     for exercise in exercises:
         utterances: FrozenSet[Utterance] = frozenset()
 
-        words_in_name = {word.strip() for word in exercise.name.split(" ")}
-        utterances = utterances.union(words_in_name)
+        name_and_muscles = (exercise.name, *exercise.target_muscles)
+        words = (word.split(" ") for word in name_and_muscles)
+        clean_words = {word.strip() for word in itertools.chain.from_iterable(words)}
+        utterances = utterances.union(clean_words)
 
-        for word in words_in_name:
+        for word in clean_words:
             word_chunk = ""
             for character in word:
                 word_chunk += character
