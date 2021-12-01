@@ -143,7 +143,10 @@ def main() -> None:
         )
     )
 
-    updater.start_polling()
+    updater.start_polling()  # I think this spawns threads and carries on (non-blocking)
+
+    updater.idle()  # Wait for a signal to stop bot and gracefully clean up threads
+    logger.debug("Bot gracefully stopped")
 
 
 if __name__ == "__main__":
