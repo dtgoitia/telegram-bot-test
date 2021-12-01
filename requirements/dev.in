@@ -1,0 +1,9 @@
+black
+flake8
+ipdb
+isort
+mypy
+pip-tools
+pytest
+selenium
+types-requests

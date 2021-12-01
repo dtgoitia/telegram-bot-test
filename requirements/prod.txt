@@ -1,0 +1,25 @@
+apscheduler==3.6.3
+    # via python-telegram-bot
+cachetools==4.2.2
+    # via python-telegram-bot
+certifi==2021.10.8
+    # via python-telegram-bot
+python-telegram-bot==13.8.1
+    # via -r requirements/prod.in
+pytz==2021.3
+    # via
+    #   apscheduler
+    #   python-telegram-bot
+pytz-deprecation-shim==0.1.0.post0
+    # via tzlocal
+six==1.16.0
+    # via apscheduler
+tornado==6.1
+    # via python-telegram-bot
+tzdata==2021.5
+    # via pytz-deprecation-shim
+tzlocal==4.1
+    # via apscheduler
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools

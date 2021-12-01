@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  telegram-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telegram-bot
+    container_name: telegram-bot
+    command: python -m telegram_bot
+    environment:
+      - PYTHONBREAKPOINT=ipdb.set_trace
+      - TOKEN=${TELEGRAM_API_BOT}
+    volumes:
+      - ./telegram_bot:/app/telegram_bot
