@@ -1,9 +1,9 @@
 import logging
 
 from telegram import Update
-from telegram.ext import CallbackContext, Filters, MessageHandler, Updater
+from telegram.ext import CallbackContext, Dispatcher, Updater
 
-from telegram_bot.commands import hi, start
+from telegram_bot.commands import start
 from telegram_bot.config import get_config
 
 logging.basicConfig(
@@ -14,24 +14,22 @@ logging.basicConfig(
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo back to the user with whatever message the user have said to the bot."""
-    context.message.bot.send_message(
-        chat_id=context.message.chat_id,
-        text=context.message.text,
+    update.message.reply_markdown_v2(
+        text=update.message.text,
     )
 
 
 def main() -> None:
-    token = get_config("TOKEN")
+    config = get_config()
 
-    updater = Updater(token=token)
-    dispatcher = updater.dispatcher
+    updater = Updater(token=config.telegram_token)
+    dispatcher: Dispatcher = updater.dispatcher  # type: ignore
 
     # Commands
     dispatcher.add_handler(start)
-    dispatcher.add_handler(hi)
 
-    echo_handler = MessageHandler(Filters.text, echo)
-    dispatcher.add_handler(echo_handler)
+    # echo_handler = MessageHandler(Filters.text, echo)
+    # dispatcher.add_handler(echo_handler)
 
     updater.start_polling()
 

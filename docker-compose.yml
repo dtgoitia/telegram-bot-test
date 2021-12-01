@@ -10,6 +10,6 @@ services:
     command: python -m telegram_bot
     environment:
       - PYTHONBREAKPOINT=ipdb.set_trace
-      - TOKEN=${TELEGRAM_API_BOT}
+      - TELEGRAM_API_BOT=${TELEGRAM_API_BOT}
     volumes:
       - ./telegram_bot:/app/telegram_bot

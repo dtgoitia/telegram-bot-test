@@ -1,7 +1,7 @@
 PYTHON_DIR:=.
 
 run_bot:
-	docker-compose up telegram-bot
+	docker-compose run --rm telegram-bot
 
 rebuild_bot:
 	docker-compose build telegram-bot
