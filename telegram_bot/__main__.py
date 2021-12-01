@@ -1,4 +1,5 @@
 import logging
+from typing import Callable, List
 from uuid import uuid4
 
 from telegram import (
@@ -20,6 +21,8 @@ from telegram.ext import (
 from telegram.utils.helpers import escape_markdown
 
 from telegram_bot.config import get_config
+from telegram_bot.exercises import AVAILABLE_EXERCISES, Exercise
+from telegram_bot.search import ExerciseIndex
 
 logger = logging.getLogger(__name__)
 
@@ -56,19 +59,43 @@ def button(update: Update, context: CallbackContext) -> None:
     query.edit_message_text(text=f"Selected option: {query.data}")
 
 
-def gym_exercises_inline_query(update: Update, context: CallbackContext) -> None:
-    logger.debug(f"gym_exercises_inline_query: {update.inline_query.query}")
-    ...
+def gym_exercises_inline_query_factory(exercises: List[Exercise]) -> Callable:
+    indexed_exercises = ExerciseIndex(exercises=exercises)
+
+    def gym_exercises_inline_query(update: Update, _: CallbackContext) -> None:
+        query = update.inline_query.query
+        logger.debug(f"gym_exercises_inline_query: {query!r}")
+
+        if query == "":
+            return
+
+        exercises = indexed_exercises.query(query)
+
+        results = [
+            InlineQueryResultArticle(
+                id=str(uuid4()),
+                title=exercise.name,
+                input_message_content=InputTextMessageContent(
+                    f"```{exercise.to_str()}```",
+                    parse_mode=ParseMode.MARKDOWN_V2,
+                ),
+            )
+            for exercise in exercises
+        ]
+
+        update.inline_query.answer(results)
+
+    return gym_exercises_inline_query
 
 
-def inlinequery(update: Update, context: CallbackContext) -> None:
+def inlinequery(update: Update, _: CallbackContext) -> None:
     """Handle the inline query."""
     logger.debug(update)
     query = update.inline_query.query
-    logger.debug(f"query = {query!r}")
+    logger.info(f"query = {query!r}")
 
-    # if query == "":
-    #     return
+    if query == "":
+        return
 
     results = [
         InlineQueryResultArticle(
@@ -109,12 +136,12 @@ def main() -> None:
 
     # Commands
     dispatcher.add_handler(CommandHandler("start", start_cmd))
-    # dispatcher.add_handler(CallbackQueryHandler(button))
     dispatcher.add_handler(CallbackQueryHandler(button))
-    dispatcher.add_handler(InlineQueryHandler(inlinequery))
-
-    # echo_handler = MessageHandler(Filters.text, echo)
-    # dispatcher.add_handler(echo_handler)
+    dispatcher.add_handler(
+        InlineQueryHandler(
+            gym_exercises_inline_query_factory(exercises=AVAILABLE_EXERCISES)
+        )
+    )
 
     updater.start_polling()
 
