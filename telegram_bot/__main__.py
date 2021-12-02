@@ -76,7 +76,7 @@ def gym_exercises_inline_query_factory(exercises: List[Exercise]) -> Callable:
                 id=str(uuid4()),
                 title=exercise.name,
                 input_message_content=InputTextMessageContent(
-                    f"```{exercise.to_str()}```",
+                    f"```\n{exercise.to_str()}```",
                     parse_mode=ParseMode.MARKDOWN_V2,
                 ),
             )
