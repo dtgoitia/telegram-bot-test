@@ -81,7 +81,7 @@ class Muscles(object):
 MACHINE_EXERCISES = [
     MachineExercise(
         name="lat pulldown",
-        weight=32,
+        weight=39,
         reps=10,
         series=3,
         rest=30,
@@ -102,7 +102,7 @@ MACHINE_EXERCISES = [
     ),
     MachineExercise(
         name="seated cable row",
-        weight=27,
+        weight=32,
         reps=10,
         series=3,
         rest=30,
