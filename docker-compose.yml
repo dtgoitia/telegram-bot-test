@@ -15,3 +15,17 @@ services:
       - TELEGRAM_BOT_OWNER_USER_ID=${TELEGRAM_BOT_OWNER_USER_ID}
     volumes:
       - ./telegram_bot:/app/telegram_bot
+
+  dtg_expenses_bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telegram-bot
+    container_name: telegram-dtg_expenses_bot
+    command: python -m telegram_bot.bots.dtg_expenses_bot
+    environment:
+      - PYTHONBREAKPOINT=ipdb.set_trace
+      - TELEGRAM_API_BOT=${TELEGRAM_API_TOKEN_DTG_EXPENSES_BOT}
+      - TELEGRAM_BOT_OWNER_USER_ID=${TELEGRAM_BOT_OWNER_USER_ID}
+    volumes:
+      - ./telegram_bot:/app/telegram_bot

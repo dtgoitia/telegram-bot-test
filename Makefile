@@ -3,8 +3,12 @@ PYTHON_DIR:=.
 run_dtg_bot:
 	docker-compose run --rm dtg_bot
 
-rebuild_bot:
-	docker-compose build telegram-bot
+run_dtg_expenses_bot:
+	docker-compose run --rm dtg_expenses_bot
+
+rebuild_bots:
+	docker-compose build dtg_bot
+	docker-compose build dtg_expenses_bot
 
 shell_bot:
 	docker-compose run --rm telegram-bot bash

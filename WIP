@@ -1,0 +1,19 @@
+# WIP
+
+- [ ] Deploy the bot to Heroku [3][3]
+- [ ] Keep the bot awake with UptimeRobot [2][2]
+- [ ] Store exercises data in Hasura
+- [ ] Provision everything with Terraform
+  - [Hasura](https://github.com/hasuracommunity/terraform-provider-hasura)
+  - [Heroku](https://registry.terraform.io/providers/heroku/heroku/latest/docs)
+  - [UptimeRobot](https://registry.terraform.io/providers/louy/uptimerobot/latest/docs)
+  - [GitHub actions secrets](https://github.com/walix/walix/blob/master/infrastructure/state/management/github/main.tf)
+
+- [ ] Set up tooling to fetch data from Telegram into your exercise logs.
+- [x] Create bot to log expenses
+
+<!-- External references -->
+
+[1]: https://nordicapis.com/developing-secure-bots-using-the-telegram-apis/ "Secure your Telegram bot"
+[2]: https://dev.to/elijahtrillionz/your-heroku-app-is-slow-to-load-because-of-this-4lep "Prevent your app sleeping in Heroku"
+[3]: https://towardsdatascience.com/bring-your-telegram-chatbot-to-the-next-level-c771ec7d31e4 "Improve bot (deploy to prod, etc.)"
