@@ -1,15 +1,17 @@
 version: "3.8"
 
 services:
-  telegram-bot:
+
+  dtg_bot:
     build:
       context: .
       dockerfile: Dockerfile
     image: telegram-bot
-    container_name: telegram-bot
-    command: python -m telegram_bot
+    container_name: telegram-dtg_bot
+    command: python -m telegram_bot.bots.dtg_bot
     environment:
       - PYTHONBREAKPOINT=ipdb.set_trace
-      - TELEGRAM_API_BOT=${TELEGRAM_API_BOT}
+      - TELEGRAM_API_BOT=${TELEGRAM_API_TOKEN_DTG_BOT}
+      - TELEGRAM_BOT_OWNER_USER_ID=${TELEGRAM_BOT_OWNER_USER_ID}
     volumes:
       - ./telegram_bot:/app/telegram_bot

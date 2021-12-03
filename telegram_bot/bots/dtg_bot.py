@@ -10,18 +10,11 @@ from telegram import (
     ParseMode,
     Update,
 )
-from telegram.ext import (
-    CallbackContext,
-    CallbackQueryHandler,
-    CommandHandler,
-    Dispatcher,
-    InlineQueryHandler,
-    Updater,
-)
-from telegram.utils.helpers import escape_markdown
+from telegram.ext import CallbackContext, InlineQueryHandler
 
-from telegram_bot.config import get_config
+from telegram_bot.bots.core import run_bot
 from telegram_bot.exercises import AVAILABLE_EXERCISES, Exercise
+from telegram_bot.log import DEFAULT_LOG_FORMAT, DEFAULT_LOG_LEVEL
 from telegram_bot.search import ExerciseIndex
 
 logger = logging.getLogger(__name__)
@@ -59,7 +52,7 @@ def button(update: Update, context: CallbackContext) -> None:
     query.edit_message_text(text=f"Selected option: {query.data}")
 
 
-def gym_exercises_inline_query_factory(exercises: List[Exercise]) -> Callable:
+def get_gym_exercises_inline_query_callback(exercises: List[Exercise]) -> Callable:
     indexed_exercises = ExerciseIndex(exercises=exercises)
 
     def gym_exercises_inline_query(update: Update, _: CallbackContext) -> None:
@@ -88,70 +81,15 @@ def gym_exercises_inline_query_factory(exercises: List[Exercise]) -> Callable:
     return gym_exercises_inline_query
 
 
-def inlinequery(update: Update, _: CallbackContext) -> None:
-    """Handle the inline query."""
-    logger.debug(update)
-    query = update.inline_query.query
-    logger.info(f"query = {query!r}")
-
-    if query == "":
-        return
-
-    results = [
-        InlineQueryResultArticle(
-            # id=str(uuid4()),
-            id="1",
-            title="test",
-            input_message_content=InputTextMessageContent("this is a message"),
-        ),
-        InlineQueryResultArticle(
-            id=str(uuid4()),
-            title="Caps",
-            input_message_content=InputTextMessageContent(query.upper()),
-        ),
-        InlineQueryResultArticle(
-            id=str(uuid4()),
-            title="Bold",
-            input_message_content=InputTextMessageContent(
-                f"*{escape_markdown(query)}*", parse_mode=ParseMode.MARKDOWN
-            ),
-        ),
-        InlineQueryResultArticle(
-            id=str(uuid4()),
-            title="Italic",
-            input_message_content=InputTextMessageContent(
-                f"_{escape_markdown(query)}_", parse_mode=ParseMode.MARKDOWN
-            ),
-        ),
+def run_dtg_bot() -> None:
+    callback = get_gym_exercises_inline_query_callback(exercises=AVAILABLE_EXERCISES)
+    handlers = [
+        InlineQueryHandler(callback=callback),
     ]
 
-    update.inline_query.answer(results)
-
-
-def main() -> None:
-    config = get_config()
-
-    updater = Updater(token=config.telegram_token)
-    dispatcher: Dispatcher = updater.dispatcher  # type: ignore
-
-    # Commands
-    dispatcher.add_handler(CommandHandler("start", start_cmd))
-    dispatcher.add_handler(CallbackQueryHandler(button))
-    dispatcher.add_handler(
-        InlineQueryHandler(
-            gym_exercises_inline_query_factory(exercises=AVAILABLE_EXERCISES)
-        )
-    )
-
-    updater.start_polling()  # I think this spawns threads and carries on (non-blocking)
-
-    updater.idle()  # Wait for a signal to stop bot and gracefully clean up threads
-    logger.debug("Bot gracefully stopped")
+    run_bot(handlers=handlers)
 
 
 if __name__ == "__main__":
-    log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    logging.basicConfig(format=log_format, level=logging.DEBUG)
-
-    logger.debug("Running main function")
-    main()
+    logging.basicConfig(format=DEFAULT_LOG_FORMAT, level=DEFAULT_LOG_LEVEL)
+    run_dtg_bot()
