@@ -2,10 +2,10 @@ apscheduler==3.6.3
     # via python-telegram-bot
 cachetools==4.2.2
     # via python-telegram-bot
-certifi==2021.10.8
+certifi==2022.12.7
     # via python-telegram-bot
 python-telegram-bot==13.8.1
-    # via -r requirements/prod.in
+    # via -r prod.in
 pytz==2021.3
     # via
     #   apscheduler
